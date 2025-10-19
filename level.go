@@ -40,6 +40,6 @@ func NewLevel(d Difficulty) *Level {
 	}
 }
 
-func (l *Level) GetBlackTile() int {
+func (l *Level) GetBlackTilePos() int {
 	return rand.Intn(l.dimensions.nCols - 1)
 }

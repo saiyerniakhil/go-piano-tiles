@@ -56,16 +56,13 @@ func (g *Game) Run() {
 
 func (g *Game) buildLevel() {
 	level := tl.NewBaseLevel(tl.Cell{})
-	width := boardWidth*squareWidth + (boardWidth+1)*1
-	height := boardHeight*squareHeight + (boardHeight+1)*1
-	level.AddEntity(tl.NewRectangle(1, 1, width, height, tl.ColorGreen))
-	for i := 0; i < boardHeight; i++ {
-		for j := 0; j < boardWidth; j++ {
-			x := offSetX + 1 + (j * squareWidth) + j*1
-			y := offSetY + 1 + (i * squareHeight) + i*1
-			level.AddEntity(tl.NewRectangle(x, y, squareWidth, squareHeight, tl.ColorBlue))
-		}
-	}
+	width := boardWidth*squareWidth + (boardWidth+2)*borderThickness
+	height := boardHeight*squareHeight + (boardHeight+2)*borderThickness
+	// background
+	level.AddEntity(tl.NewRectangle(0, 0, width, height, tl.ColorGreen))
+	fmt.Printf("[buildLevel] offset values - X (%d) Y (%d)\n", offSetX, offSetY)
+	fmt.Printf("[buildLevel] board values - width[j] (%d) height[i] (%d)\n", boardWidth, boardHeight)
+	// board rendering
 	g.board.populateBoard(level)
 	g.game.Screen().SetLevel(level)
 	g.updateStatusText()
