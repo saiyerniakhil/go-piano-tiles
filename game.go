@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"time"
 
 	tl "github.com/JoelOtter/termloop"
@@ -18,14 +19,18 @@ type Game struct {
 	stats *tl.Text
 }
 
+func GetBlackTilePos() int {
+	return rand.Intn(boardWidth - 1)
+}
+
 func NewGame() *Game {
-	startLevel := NewLevel(EASY)
+	startLevel := tl.NewBaseLevel(tl.Cell{})
 	startScore := &Score{
 		time: 0,
 	}
 	game := &Game{
 		game:  tl.NewGame(),
-		board: NewBoard(*startLevel),
+		board: NewBoard(startLevel),
 		score: startScore,
 		stats: tl.NewText(25, 0, "", tl.ColorWhite, tl.ColorBlack),
 	}
@@ -63,6 +68,7 @@ func (g *Game) buildLevel() {
 	fmt.Printf("[buildLevel] offset values - X (%d) Y (%d)\n", offSetX, offSetY)
 	fmt.Printf("[buildLevel] board values - width[j] (%d) height[i] (%d)\n", boardWidth, boardHeight)
 	// board rendering
+	g.game.DebugOn()
 	g.board.populateBoard(level)
 	g.game.Screen().SetLevel(level)
 	g.updateStatusText()

@@ -32,7 +32,6 @@ func (t *Tile) Draw(s *tl.Screen) {
 	}
 }
 
-// TODO: Implement this
 // 49 - Num1
 // 50 - Num2
 // 51 - Num3

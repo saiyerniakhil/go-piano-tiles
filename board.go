@@ -1,15 +1,13 @@
 package main
 
 import (
-	"fmt"
-
 	tl "github.com/JoelOtter/termloop"
 )
 
 // Board is a collection of squares
 type Board struct {
-	plan  [][]Tile
-	level Level
+	plan  *[][]Tile
+	level tl.Level
 	game  *Game
 }
 
@@ -21,7 +19,11 @@ func (b *Board) SetGame(g *Game) {
 func (b *Board) Move(valid bool) {
 	if valid {
 		//TODO: From b.plan remove the row -> plan[boardHeigh - 1]
-		//add new entities
+		for _, entity := range (*b.plan)[boardHeight-1] {
+			b.level.RemoveEntity(&entity)
+		}
+		// newRow := b.NewRow()
+
 	} else {
 		//stop the timer - "Game Over"
 	}
@@ -29,11 +31,18 @@ func (b *Board) Move(valid bool) {
 
 func (b *Board) NewRow() []Tile {
 	row := make([]Tile, boardWidth)
+	blackTile := GetBlackTilePos()
 	for i := range boardWidth {
-		bc := BoardCoords{x: i, y: boardHeight - 1}
+		bc := BoardCoords{x: i, y: 0}
 		// place this row at the top
 		newPosX, newPosY := getPosition(bc)
-		row = append(row, *NewTile(newPosX, newPosY, squareWidth, squareHeight, tl.ColorWhite, b.game, bc))
+		var rc *Tile
+		if blackTile == i {
+			rc = NewTile(newPosX, newPosY, squareWidth, squareHeight, tl.ColorBlack, b.game, bc)
+		} else {
+			rc = NewTile(newPosX, newPosY, squareWidth, squareHeight, tl.ColorWhite, b.game, bc)
+		}
+		row = append(row, *rc)
 	}
 	return row
 }
@@ -42,7 +51,7 @@ func (b *Board) IsValidMove(currKey int) bool {
 	// x = board width, col
 	// y = board height, row
 	// get the last row
-	if b.plan[boardHeight-1][currKey].Color() == tl.ColorBlack {
+	if (*b.plan)[boardHeight-1][currKey].Color() == tl.ColorBlack {
 		return true
 	} else {
 		return false
@@ -69,27 +78,27 @@ func getPosition(bc BoardCoords) (int, int) {
 	return x, y
 }
 
-func NewBoard(level Level) *Board {
+func NewBoard(level tl.Level) *Board {
 	rows, cols := boardHeight, boardWidth
 	plan := make([][]Tile, rows)
 	for i := 0; i < rows; i++ {
 		plan[i] = make([]Tile, cols)
 	}
 	return &Board{
-		plan:  plan,
+		plan:  &plan,
 		level: level,
 	}
 }
 
 func (b *Board) populateBoard(level tl.Level) {
 	nRows, nCols := boardHeight, boardWidth
-	fmt.Printf("rows: %d cols: %d\n", nRows, nCols)
+	// fmt.Printf("rows: %d cols: %d\n", nRows, nCols)
 	for y := 0; y < nRows; y++ {
-		blackTile := b.level.GetBlackTilePos()
-		fmt.Printf("[populateBoard] blackTilePos(%d, %d)\n", blackTile, y)
+		blackTile := GetBlackTilePos()
+		// fmt.Printf("[populateBoard] blackTilePos(%d, %d)\n", blackTile, y)
 		for x := 0; x < nCols; x++ {
 			var rc *Tile
-			fmt.Printf("[populateBoard] board(%d, %d)\n", x, y)
+			// fmt.Printf("[populateBoard] board(%d, %d)\n", x, y)
 			boardCoords := BoardCoords{x: x, y: y}
 			newPosX, newPosY := getPosition(boardCoords)
 			if blackTile == x {
@@ -97,7 +106,7 @@ func (b *Board) populateBoard(level tl.Level) {
 			} else {
 				rc = NewTile(newPosX, newPosY, squareWidth, squareHeight, tl.ColorWhite, b.game, boardCoords)
 			}
-			b.plan[y][x] = *rc
+			(*b.plan)[y][x] = *rc
 			level.AddEntity(rc)
 		}
 	}
