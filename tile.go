@@ -36,14 +36,7 @@ func (t *Tile) Draw(s *tl.Screen) {
 // 50 - Num2
 // 51 - Num3
 // 52 - Num4
-func (r *Tile) Tick(ev tl.Event) {
-	if ev.Type == tl.EventKey {
-		key := int(ev.Ch - 49)
-		if key >= 0 && key < 4 {
-			r.g.board.Move(r.g.board.IsValidMove(key))
-		}
-	}
-}
+func (r *Tile) Tick(ev tl.Event) {}
 
 // Size returns the width and height in characters of the Tile.
 func (r *Tile) Size() (int, int) {

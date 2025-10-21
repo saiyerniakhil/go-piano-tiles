@@ -6,9 +6,10 @@ import (
 
 // Board is a collection of squares
 type Board struct {
-	plan  *[][]Tile
-	level tl.Level
-	game  *Game
+	plan          *[][]Tile
+	level         tl.Level
+	game          *Game
+	rowsRemaining int
 }
 
 func (b *Board) SetGame(g *Game) {
@@ -19,13 +20,44 @@ func (b *Board) SetGame(g *Game) {
 func (b *Board) Move(valid bool) {
 	if valid {
 		//TODO: From b.plan remove the row -> plan[boardHeigh - 1]
-		for _, entity := range (*b.plan)[boardHeight-1] {
-			b.level.RemoveEntity(&entity)
+		for i := range (*b.plan)[boardHeight-1] {
+			b.level.RemoveEntity(&(*b.plan)[boardHeight-1][i])
 		}
-		// newRow := b.NewRow()
+		// shift rows down
+		for y := boardHeight - 1; y > 0; y-- {
+			for x := 0; x < boardWidth; x++ {
+				(*b.plan)[y][x] = (*b.plan)[y-1][x]
+				newBoardCoords := BoardCoords{x: x, y: y}
+				newPosX, newPosY := getPosition(newBoardCoords)
+				(*b.plan)[y][x].SetPosition(newPosX, newPosY)
+				(*b.plan)[y][x].boardCoords = newBoardCoords
 
+			}
+		}
+		// add next row to the plan and at the top of the board
+		if b.rowsRemaining > 0 {
+			newRow := b.NewRow()
+			for x := 0; x < boardWidth; x++ {
+				(*b.plan)[0][x] = newRow[x]
+				b.level.AddEntity(&(*b.plan)[0][x])
+			}
+			b.rowsRemaining--
+		} else {
+			//no more rows remaining
+			for x := 0; x < boardWidth; x++ {
+				bc := BoardCoords{x: x, y: 0}
+				newPosX, newPosY := getPosition(bc)
+				whiteTile := NewTile(newPosX, newPosY, squareWidth, squareHeight, tl.ColorWhite, b.game, bc)
+				(*b.plan)[0][x] = *whiteTile
+				b.level.AddEntity(&(*b.plan)[0][x])
+			}
+		}
+
+		b.game.RefreshScreen()
+		b.game.IncrementScore()
 	} else {
 		//stop the timer - "Game Over"
+		b.game.GameOver(false)
 	}
 }
 
@@ -42,7 +74,7 @@ func (b *Board) NewRow() []Tile {
 		} else {
 			rc = NewTile(newPosX, newPosY, squareWidth, squareHeight, tl.ColorWhite, b.game, bc)
 		}
-		row = append(row, *rc)
+		row[i] = *rc
 	}
 	return row
 }
@@ -64,10 +96,11 @@ const (
 	squareOffsetX   = 1
 	squareOffsetY   = 2
 	borderThickness = 1
-	squareWidth     = 3 //DONE
-	squareHeight    = 6 //DONE
+	squareWidth     = 4 //DONE
+	squareHeight    = 8 //DONE
 	boardWidth      = 4 //Relative to Square width
 	boardHeight     = 5 //Relative
+	totalMoves      = 20
 )
 
 // getPosition returns the position when the boardPos of square is given
@@ -85,8 +118,9 @@ func NewBoard(level tl.Level) *Board {
 		plan[i] = make([]Tile, cols)
 	}
 	return &Board{
-		plan:  &plan,
-		level: level,
+		plan:          &plan,
+		level:         level,
+		rowsRemaining: totalMoves - boardHeight,
 	}
 }
 
