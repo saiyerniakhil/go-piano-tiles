@@ -11,7 +11,12 @@ release:
 	@if [ "$(PUSH)" = "true" ]; then \
 		npm run release; \
 		git push --follow-tags origin $$(git rev-parse --abbrev-ref HEAD); \
+		goreleaser release --clean; \
 	else \
 		npm run release; \
 		echo "Release completed locally. No changes pushed to origin."; \
+		goreleaser release --snapshot --clean; \
 	fi
+
+clean:
+	rm -rf dist/*
