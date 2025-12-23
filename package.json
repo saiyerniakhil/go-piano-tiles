@@ -1,0 +1,27 @@
+{
+  "name": "go-piano-tiles",
+  "version": "1.0.0",
+  "description": "Built using [Go](https://pkg.go.dev/), [Termloop](https://github.com/JoelOtter/termloop)",
+  "main": "index.js",
+  "scripts": {
+    "commit": "cz",
+    "release": "standard-version",
+    "prepare": "husky"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^9.1.7",
+    "standard-version": "^9.5.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
