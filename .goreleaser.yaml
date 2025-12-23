@@ -22,6 +22,29 @@ builds:
       - linux
       - windows
       - darwin
+    goarch:
+      - amd64
+      - arm64
+
+nfpms:
+  - maintainer: madakhil
+    description: Piano Tiles game in Go
+    homepage: https://github.com/madakhil/go-piano-tiles
+    license: ISC
+    formats:
+      - deb
+      - rpm
+      - apk
+    publishers:
+      - name: github
+        ids:
+          - gh-packages
+
+publishers:
+  - name: github
+    id: gh-packages
+    env:
+      - GITHUB_TOKEN={{ .Env.GITHUB_TOKEN }}
 
 archives:
   - formats: [tar.gz]
@@ -38,6 +61,10 @@ archives:
       - goos: windows
         formats: [zip]
 
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
 changelog:
   sort: asc
   filters:
@@ -46,6 +73,9 @@ changelog:
       - "^test:"
 
 release:
+  github:
+    owner: madakhil
+    name: go-piano-tiles
   footer: >-
 
     ---
