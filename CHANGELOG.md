@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.6](https://github.com/saiyerniakhil/go-piano-tiles/compare/v1.1.5...v1.1.6) (2025-12-24)
+
+
+### Bug Fixes
+
+* disable cache is go setup, publisher details ([824ed72](https://github.com/saiyerniakhil/go-piano-tiles/commit/824ed72d529e50235918cde3f10cd62ff7523ac6))
+
 ### [1.1.5](https://github.com/saiyerniakhil/go-piano-tiles/compare/v1.1.4...v1.1.5) (2025-12-24)
 
 
