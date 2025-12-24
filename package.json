@@ -1,6 +1,6 @@
 {
   "name": "go-piano-tiles",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "description": "Built using [Go](https://pkg.go.dev/), [Termloop](https://github.com/JoelOtter/termloop)",
   "main": "index.js",
   "scripts": {
