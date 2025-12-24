@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.5](https://github.com/saiyerniakhil/go-piano-tiles/compare/v1.1.4...v1.1.5) (2025-12-24)
+
+
+### Bug Fixes
+
+* rerun actions ([7c6aa9f](https://github.com/saiyerniakhil/go-piano-tiles/commit/7c6aa9fff81000d224c1c8b45e1c838f8e5e2159))
+
 ### [1.1.4](https://github.com/saiyerniakhil/go-piano-tiles/compare/v1.1.1...v1.1.4) (2025-12-23)
 
 
