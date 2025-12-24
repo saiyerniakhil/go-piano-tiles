@@ -41,13 +41,29 @@ jobs:
 
       - name: Run release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: make release PUSH=true
+        run: |
+          git fetch --tags
+          git pull origin main --rebase
+          
+          # Check if the current version in package.json is already tagged
+          VERSION=$(node -p "require('./package.json').version")
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "Tag v$VERSION already exists."
+            # Check if there are any new commits since this tag
+            IF_NEW_COMMITS=$(git log "v$VERSION"..HEAD --oneline)
+            if [ -z "$IF_NEW_COMMITS" ]; then
+              echo "No new commits since v$VERSION. Skipping release."
+              exit 0
+            fi
+          fi
+          
+          make release PUSH=true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') || (github.event_name == 'push' && github.ref == 'refs/heads/main')
         with:
           distribution: goreleaser
           version: latest

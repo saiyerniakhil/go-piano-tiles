@@ -10,8 +10,7 @@ run: build
 release:
 	@if [ "$(PUSH)" = "true" ]; then \
 		npm run release; \
-		git push --follow-tags origin $$(git rev-parse --abbrev-ref HEAD); \
-		goreleaser release --clean; \
+		git push --follow-tags origin HEAD:main; \
 	else \
 		npm run release; \
 		echo "Release completed locally. No changes pushed to origin."; \
