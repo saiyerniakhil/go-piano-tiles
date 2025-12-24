@@ -27,7 +27,8 @@ builds:
       - arm64
 
 nfpms:
-  - maintainer: madakhil
+  - id: gh-packages
+    maintainer: madakhil
     description: Piano Tiles game in Go
     homepage: https://github.com/madakhil/go-piano-tiles
     license: ISC
@@ -35,16 +36,17 @@ nfpms:
       - deb
       - rpm
       - apk
-    publishers:
-      - name: github
-        ids:
-          - gh-packages
 
-publishers:
-  - name: github
-    id: gh-packages
-    env:
-      - GITHUB_TOKEN={{ .Env.GITHUB_TOKEN }}
+# Publishers are for custom commands to publish artifacts.
+# See https://goreleaser.com/customization/publishers/
+# publishers:
+#   - name: github
+#     ids:
+#       - gh-packages
+#     env:
+#       - GITHUB_TOKEN={{ .Env.GITHUB_TOKEN }}
+#     cmd: |
+#       # add your custom publish command here
 
 archives:
   - formats: [tar.gz]
@@ -64,7 +66,7 @@ archives:
 checksum:
   name_template: 'checksums.txt'
 snapshot:
-  name_template: "{{ .Tag }}-next"
+  version_template: "{{ .Tag }}-next"
 changelog:
   sort: asc
   filters:
